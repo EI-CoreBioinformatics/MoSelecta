@@ -70,7 +70,7 @@ Use `--source-name` to assign a unique label to each input file. If omitted, lab
 
 Malformed or unusable records are reported and, where possible, skipped. Use `--strict` to make applicable input-validation errors fatal.
 
-MoSelecta benefits from complementary prediction sources, as structural agreement between sources contributes to scoring and selection. Closely related prediction sets may be better combined into one source, and care should be taken when reusing evidence that helped generate the predictions. See [Guidance on selecting prediction sources and supporting evidence](docs/input-source-guidance.md).
+We strongly recommend using at least three complementary, independently generated gene-prediction sources for routine analyses. Although MoSelecta can operate with two sources and evidence, three or more provide stronger corroboration when predictions disagree and allow more informative assessment of structural consensus. However, more sources are not necessarily better: closely related prediction sets may inflate apparent support and may be better combined into a single source. Similar care should be taken when reusing protein or transcript evidence that contributed to generating the predictions. See [Guidance on selecting prediction sources and supporting evidence](docs/input-source-guidance.md).
 
 ### Optional inputs
 
