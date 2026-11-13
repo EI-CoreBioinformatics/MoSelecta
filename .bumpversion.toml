@@ -1,0 +1,63 @@
+[tool.bumpversion]
+current_version = "0.3.0"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+commit = false
+tag = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+message = "Bump version: {current_version} → {new_version}"
+allow_shell_hooks = true
+pre_commit_hooks = [ "uv lock", "git add uv.lock" ]
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "README.md"
+search = "package metadata is `{current_version}`"
+replace = "package metadata is `{new_version}`"
+
+[[tool.bumpversion.files]]
+filename = "INSTALLATION.md"
+search = "moselecta=={current_version}"
+replace = "moselecta=={new_version}"
+
+[[tool.bumpversion.files]]
+filename = "INSTALLATION.md"
+search = "moselecta-{current_version}"
+replace = "moselecta-{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "INSTALLATION.md"
+search = "moselecta:{current_version}"
+replace = "moselecta:{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "CITATION.cff"
+search = 'version: "{current_version}"'
+replace = 'version: "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "src/moselecta/constants.py"
+search = 'PROGRAM_VERSION = "{current_version}"'
+replace = 'PROGRAM_VERSION = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "tests/test_cli_smoke.py"
+search = 'moselecta.__version__ == "{current_version}"'
+replace = 'moselecta.__version__ == "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "tests/test_output_profiles.py"
+search = 'configuration["moselecta"]["version"] == "{current_version}"'
+replace = 'configuration["moselecta"]["version"] == "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "Dockerfile"
+search = "MOSELECTA_VERSION={current_version}"
+replace = "MOSELECTA_VERSION={new_version}"
+
+

@@ -1,0 +1,7 @@
+##gff-version 3
+chr1	A	gene	1	270	.	+	.	ID=gene_a
+chr1	A	mRNA	1	270	.	+	.	ID=tx_a;Parent=gene_a
+chr1	A	exon	1	90	.	+	.	Parent=tx_a
+chr1	A	exon	181	270	.	+	.	Parent=tx_a
+chr1	A	CDS	1	90	.	+	0	Parent=tx_a
+chr1	A	CDS	181	270	.	+	0	Parent=tx_a

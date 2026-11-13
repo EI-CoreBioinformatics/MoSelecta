@@ -1,0 +1,40 @@
+name: Publish to Docker Hub
+
+# Called by publish.yml after the PyPI upload, because the Dockerfile
+# installs the pinned release from PyPI.
+on:
+  workflow_call:
+
+jobs:
+  update:
+    if: github.repository == 'EI-CoreBioinformatics/moselecta'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+      - name: Wait for the release on PyPI
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          for attempt in $(seq 1 30); do
+            if pip download --no-deps --no-cache-dir -d /tmp/pypi-wait "moselecta==${VERSION}" >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::moselecta==${VERSION} did not appear on PyPI within 5 minutes"
+          exit 1
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: gemygk/moselecta
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          platforms: linux/amd64,linux/arm64
+          tags: "latest,${{ steps.version.outputs.version }}"

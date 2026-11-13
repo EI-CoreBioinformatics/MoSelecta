@@ -1,0 +1,7 @@
+##gff-version 3
+chr1	B	gene	1	270	.	+	.	ID=gene_b
+chr1	B	mRNA	1	270	.	+	.	ID=tx_b;Parent=gene_b
+chr1	B	exon	1	90	.	+	.	Parent=tx_b
+chr1	B	exon	181	270	.	+	.	Parent=tx_b
+chr1	B	CDS	1	90	.	+	0	Parent=tx_b
+chr1	B	CDS	181	270	.	+	0	Parent=tx_b

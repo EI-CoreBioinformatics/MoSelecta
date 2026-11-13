@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use MoSelecta, please cite this software."
+title: "MoSelecta"
+type: software
+authors:
+  - family-names: "Swarbreck"
+    given-names: "David"
+    affiliation: "Earlham Institute"
+    orcid: "https://orcid.org/0000-0002-5453-1013"
+  - family-names: "Kaithakottil"
+    given-names: "Gemy"
+    affiliation: "Earlham Institute"
+    orcid: "https://orcid.org/0000-0003-1360-7808"
+version: "0.3.0"
+license: MIT
+abstract: "CDS-structure-aware gene-model selection with optional genomic sequence, protein, and transcript evidence integration."

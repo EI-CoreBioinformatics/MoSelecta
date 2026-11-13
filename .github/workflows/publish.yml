@@ -1,0 +1,73 @@
+name: Publish release
+
+# Pushing a v* tag builds the package, uploads it to PyPI, creates the GitHub
+# release and then builds the Docker image (which installs from PyPI).
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.repository == 'EI-CoreBioinformatics/moselecta'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Check the tag matches the package version
+        run: |
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match pyproject.toml version ${version}"
+            exit 1
+          fi
+      - name: Build wheel and sdist
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --outdir dist
+      - uses: actions/upload-artifact@v7
+        with:
+          name: moselecta-dist
+          path: dist/*
+          if-no-files-found: error
+
+  pypi:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/moselecta/
+    permissions:
+      id-token: write # PyPI trusted publishing; no API token is stored
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: moselecta-dist
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    needs: pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: moselecta-dist
+          path: dist
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release create "${GITHUB_REF_NAME}" dist/* --verify-tag --generate-notes --title "MoSelecta ${GITHUB_REF_NAME}"
+
+  docker:
+    needs: pypi
+    uses: ./.github/workflows/docker.yml
+    secrets: inherit
